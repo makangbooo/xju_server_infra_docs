@@ -1,4 +1,52 @@
+## 2025.5.15
+
+管理员创建用户流程
+
+创建用户的脚本：`/home/huang/management/new_user.sh`
+
+```bash
+#!/bin/bash
+name=$1
+id=$2
+homedir=$3
+passwd='$6$ltByxkgm$nGGTxpW.bgfOwqRY7fY83aJuookhyqdMf0/OoO5ulLRgiaDtSArhxAfTsM0ZDxL9NY7eJcxoqqKAc6s5MlBxJ/'
+groupadd -g ${id} ${name}
+useradd -d /home/${name} -M -u ${id} -g ${id} -s /bin/bash -p $passwd ${name}
+mkdir /${homedir}/${name}
+find /etc/skel/ -maxdepth 1 -name ".*" -exec cp -r {} /${homedir}/${name} \;
+chown -R ${name}:${name} /${homedir}/${name}
+setquota -u ${name} 512G 512G 0 0 /${homedir}
+ln -s /${homedir}/${name} /home/${name}
+echo "sudo groupadd -g ${id} ${name} && sudo useradd -d /home/${name} -M -u ${id} -g ${id} -s /bin/bash -p $passwd ${name} && sudo ln -s /${homedir}/${name} /home/${name}"
+```
+
+### 举个例子
+
+为创建zsb524账号
+
+- 1. 执行sudo ./new_user.sh zsb524 1000013 s6home2
+
+  ```bash
+  huang@xju-aslp5:~/management$ sudo ./new_user.sh zsb524 1000013 s6home2
+  mkdir: cannot create directory ‘/s6home2/zsb524’: File exists
+  setquota: Mountpoint (or device) /s6home2 not found or has no quota enabled.
+  setquota: Not all specified mountpoints are using quota.
+  sudo groupadd -g 1000013 zsb524 && sudo useradd -d /home/zsb524 -M -u 1000013 -g 1000013 -s /bin/bash -p $6$ltByxkgm$nGGTxpW.bgfOwqRY7fY83aJuookhyqdMf0/OoO5ulLRgiaDtSArhxAfTsM0ZDxL9NY7eJcxoqqKAc6s5MlBxJ/ zsb524 && sudo ln -s /s6home2/zsb524 /home/zsb524
+  ```
+
+
+
+- 2. 将echo出来的，在slurm、nfs集群的各机器中都执行一遍
+     ```bash
+     sudo groupadd -g 1000013 zsb524 && sudo useradd -d /home/zsb524 -M -u 1000013 -g 1000013 -s /bin/bash -p $6$ltByxkgm$nGGTxpW.bgfOwqRY7fY83aJuookhyqdMf0/OoO5ulLRgiaDtSArhxAfTsM0ZDxL9NY7eJcxoqqKAc6s5MlBxJ/ zsb524 && sudo ln -s /s6home2/zsb524 /home/zsb524
+     ```
+
+
+
+
+
 ## 2025.5.13
+
 为用户设置分组，设置对某个路径下文件的读写操作
 
 ```bash
