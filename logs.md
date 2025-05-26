@@ -32,10 +32,27 @@ sudo chmod -R 750 /s6home/mt522
 # 770：所有者：rwx，组用户：rwx，其他人：无权限
 # 750：所有者：rwx，组用户：r-x，其他人：无权限
 
-
 ```
 
+## 2025.5.26
 
+装显卡。要求：
+- 重装驱动
+- slurm恢复
+
+```bash
+# 1.关机
+sudo shutdown
+
+# 2.拆机
+
+# 3.显卡驱动安装
+bash /home/huang/management/NVIDIA-Linux-x86_64-550.127.05.run
+
+# 4.slurm恢复
+sudo scontrol update nodename=<nodename> state=resume
+
+```
 
 
 
