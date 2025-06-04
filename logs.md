@@ -1,3 +1,19 @@
+## 2025.6.2
+重启服务器
+```bash
+# 1. scancel 节点
+# 2. 重启命令
+sudo reboot
+# 3. 安装驱动
+cd management
+sudo bash NVIDIA-Linux-x86_64-550.127.05.run
+# 4. NFS 挂载
+mount -a
+# 5. slurm
+sudo systemctl restart slurmd
+sudo scontrol update nodename=xju-aslp5 state=resume
+```
+
 ## 2025.5.27
 
 为某个文件增加访问权限。要求：
